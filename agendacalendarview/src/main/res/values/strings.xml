@@ -10,7 +10,8 @@
     <string name="agenda_event_hour_format">kk:mm</string>
     <string name="agenda_event_all_day">All DAY</string>
     <string name="agenda_event_day_duration">d</string>
-    <string name="agenda_event_no_events">No events</string>
+    <!-- Alterando texto dias sem evento -->
+    <string name="agenda_event_no_events">Nenhum evento cadastrado</string>
 
     <!-- Weather (day parts) -->
     <string name="morning">Morning</string>

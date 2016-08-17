@@ -2,8 +2,8 @@ package com.github.tibolte.agendacalendarview.calendar.weekslist;
 
 import com.github.tibolte.agendacalendarview.CalendarManager;
 import com.github.tibolte.agendacalendarview.R;
-import com.github.tibolte.agendacalendarview.models.IDayItem;
-import com.github.tibolte.agendacalendarview.models.IWeekItem;
+import com.github.tibolte.agendacalendarview.models.DayItem;
+import com.github.tibolte.agendacalendarview.models.WeekItem;
 import com.github.tibolte.agendacalendarview.utils.BusProvider;
 import com.github.tibolte.agendacalendarview.utils.DateHelper;
 import com.github.tibolte.agendacalendarview.utils.Events;
@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
 
     private Context mContext;
     private Calendar mToday;
-    private List<IWeekItem> mWeeksList = new ArrayList<>();
+    private List<WeekItem> mWeeksList = new ArrayList<>();
     private boolean mDragging;
     private boolean mAlphaSet;
     private int mDayTextColor, mPastDayTextColor, mCurrentDayColor;
@@ -51,7 +52,7 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
 
     // endregion
 
-    public void updateWeeksItems(List<IWeekItem> weekItems) {
+    public void updateWeeksItems(List<WeekItem> weekItems) {
         this.mWeeksList.clear();
         this.mWeeksList.addAll(weekItems);
         notifyDataSetChanged();
@@ -59,7 +60,7 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
 
     // region Getters/setters
 
-    public List<IWeekItem> getWeeksList() {
+    public List<WeekItem> getWeeksList() {
         return mWeeksList;
     }
 
@@ -94,7 +95,7 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
 
     @Override
     public void onBindViewHolder(WeekViewHolder weekViewHolder, int position) {
-        IWeekItem weekItem = mWeeksList.get(position);
+        WeekItem weekItem = mWeeksList.get(position);
         weekViewHolder.bindWeek(weekItem, mToday);
     }
 
@@ -115,25 +116,32 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
         private List<LinearLayout> mCells;
         private TextView mTxtMonth;
         private FrameLayout mMonthBackground;
+//        private LinearLayout containerBolinhas;
 
         public WeekViewHolder(View itemView) {
             super(itemView);
             mTxtMonth = (TextView) itemView.findViewById(R.id.month_label);
             mMonthBackground = (FrameLayout) itemView.findViewById(R.id.month_background);
             LinearLayout daysContainer = (LinearLayout) itemView.findViewById(R.id.week_days_container);
+//            containerBolinhas = (LinearLayout) itemView.findViewById(R.id.container_bolinhas_evento);
             setUpChildren(daysContainer);
         }
 
-        public void bindWeek(IWeekItem weekItem, Calendar today) {
+        public void bindWeek(WeekItem weekItem, Calendar today) {
             setUpMonthOverlay();
 
-            List<IDayItem> dayItems = weekItem.getDayItems();
+            List<DayItem> dayItems = weekItem.getDayItems();
 
             for (int c = 0; c < dayItems.size(); c++) {
-                final IDayItem dayItem = dayItems.get(c);
+                final DayItem dayItem = dayItems.get(c);
                 LinearLayout cellItem = mCells.get(c);
                 TextView txtDay = (TextView) cellItem.findViewById(R.id.view_day_day_label);
                 TextView txtMonth = (TextView) cellItem.findViewById(R.id.view_day_month_label);
+                ImageView bolinhaAula = (ImageView) cellItem.findViewById(R.id.cell_event_aula);
+                ImageView bolinhaProva = (ImageView) cellItem.findViewById(R.id.cell_event_prova);
+                ImageView bolinhaTarefa = (ImageView) cellItem.findViewById(R.id.cell_event_tarefa);
+
+                //cor
                 View circleView = cellItem.findViewById(R.id.view_day_circle_selected);
                 cellItem.setOnClickListener(v->BusProvider.getInstance().send(new Events.DayClickedEvent(dayItem)));
 
@@ -169,12 +177,42 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
 
                 // Show a circle if the day is selected
                 if (dayItem.isSelected()) {
-                    txtDay.setTextColor(mDayTextColor);
+                    if (dayItem.isToday()){
+                        //selecao do dia atual
+                        txtDay.setTextColor(mCurrentDayColor);
+                    }
+                    else{
+                        txtDay.setTextColor(mDayTextColor);
+                    }
+
                     circleView.setVisibility(View.VISIBLE);
+
                     GradientDrawable drawable = (GradientDrawable) circleView.getBackground();
-                    drawable.setStroke((int) (1 * Resources.getSystem().getDisplayMetrics().density), mDayTextColor);
+                    //altera background dia selecionado
+                    drawable.setStroke((int) (1 * Resources.getSystem().getDisplayMetrics().density), mContext.getResources().getColor(R.color.corBordaSelecao));
                 }
 
+                // checks if the day has event and accordingly highlights the day in the calender
+                if(dayItem.hasEvent()) {
+
+                    bolinhaAula.setBackgroundResource(R.drawable.event_aula);
+                    bolinhaAula.setVisibility(View.VISIBLE);
+
+                    bolinhaTarefa.setBackgroundResource(R.drawable.event_tarefa);
+                    bolinhaTarefa.setVisibility(View.VISIBLE);
+
+                    bolinhaProva.setBackgroundResource(R.drawable.event_prova);
+                    bolinhaProva.setVisibility(View.VISIBLE);
+
+
+                    //circleView.setBackgroundResource(R.drawable.event_aula);
+                    //circleView.setVisibility(View.VISIBLE);
+                } else {
+                    bolinhaAula.setVisibility(View.GONE);
+                    bolinhaProva.setVisibility(View.GONE);
+                    bolinhaTarefa.setVisibility(View.GONE);
+                    circleView.setBackgroundResource(R.drawable.event_color_circle);
+                }
                 // Check if the month label has to be displayed
                 if (dayItem.getValue() == 15) {
                     mTxtMonth.setVisibility(View.VISIBLE);

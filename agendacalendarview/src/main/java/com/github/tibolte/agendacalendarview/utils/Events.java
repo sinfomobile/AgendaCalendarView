@@ -1,6 +1,6 @@
 package com.github.tibolte.agendacalendarview.utils;
 
-import com.github.tibolte.agendacalendarview.models.IDayItem;
+import com.github.tibolte.agendacalendarview.models.DayItem;
 
 import java.util.Calendar;
 
@@ -12,9 +12,9 @@ public class Events {
     public static class DayClickedEvent {
 
         public Calendar mCalendar;
-        public IDayItem mDayItem;
+        public DayItem mDayItem;
 
-        public DayClickedEvent(IDayItem dayItem) {
+        public DayClickedEvent(DayItem dayItem) {
             this.mCalendar = Calendar.getInstance();
             this.mCalendar.setTime(dayItem.getDate());
             this.mDayItem = dayItem;
@@ -24,7 +24,7 @@ public class Events {
             return mCalendar;
         }
 
-        public IDayItem getDay() {
+        public DayItem getDay() {
             return mDayItem;
         }
     }

@@ -51,16 +51,18 @@ public class AgendaHeaderView extends LinearLayout {
 
         Calendar today = CalendarManager.getInstance().getToday();
 
-        SimpleDateFormat dayWeekFormatter =  new SimpleDateFormat(getContext().getString(R.string.day_name_format), CalendarManager.getInstance().getLocale());;
+        SimpleDateFormat dayWeekFormatter = new SimpleDateFormat("E");
 
         txtDayOfMonth.setTextColor(getResources().getColor(R.color.calendar_text_default));
         txtDayOfWeek.setTextColor(getResources().getColor(R.color.calendar_text_default));
 
         if (DateHelper.sameDate(day, today)) {
-            txtDayOfMonth.setTextColor(currentDayTextColor);
+            //cor do texto no dia do mes atual
+            txtDayOfMonth.setTextColor(getResources().getColor(R.color.corDoTextoDiasAtivos));
             circleView.setVisibility(VISIBLE);
             GradientDrawable drawable = (GradientDrawable) circleView.getBackground();
-            drawable.setStroke((int) (2 * Resources.getSystem().getDisplayMetrics().density), currentDayTextColor);
+            //alterando cor da borda dia atual na agenda view
+            drawable.setStroke((int) (1 * Resources.getSystem().getDisplayMetrics().density), getResources().getColor(R.color.corBordaSelecao));
         } else {
             circleView.setVisibility(INVISIBLE);
         }

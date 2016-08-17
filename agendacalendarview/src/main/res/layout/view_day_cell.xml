@@ -17,8 +17,8 @@
 
         <View
             android:id="@+id/view_day_circle_selected"
-            android:layout_width="@dimen/circle_selected_size"
-            android:layout_height="@dimen/circle_selected_size"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:background="@drawable/event_color_circle"
             android:visibility="gone"/>
 
@@ -27,6 +27,45 @@
             android:layout_gravity="center"
             style="@style/CalendarCellText"/>
 
+
     </FrameLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/container_bolinhas_evento"
+        android:layout_marginTop="3dp"
+        android:layout_width="15dp"
+        android:layout_height="4dp"
+        android:orientation="horizontal"
+
+        android:gravity="center">
+
+
+        <ImageView
+            android:id="@+id/cell_event_prova"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="1dp"/>
+
+        <ImageView
+            android:id="@+id/cell_event_aula"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="1dp"/>
+
+        <ImageView
+            android:id="@+id/cell_event_tarefa"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="1dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -20,7 +20,6 @@ public class AgendaView extends FrameLayout {
 
     private AgendaListView mAgendaListView;
     private View mShadowView;
-    private boolean enablePlaceholder;
 
     // region Constructors
 
@@ -64,14 +63,12 @@ public class AgendaView extends FrameLayout {
                                     public void onGlobalLayout() {
                                         if (getWidth() != 0 && getHeight() != 0) {
                                             // display only two visible rows on the calendar view
-                                            if (enablePlaceholder) {
-                                                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
-                                                int height = getHeight();
-                                                int margin = (int) (getContext().getResources().getDimension(R.dimen.calendar_header_height) + 2 * getContext().getResources().getDimension(R.dimen.day_cell_height));
-                                                layoutParams.height = height;
-                                                layoutParams.setMargins(0, margin, 0, 0);
-                                                setLayoutParams(layoutParams);
-                                            }
+                                            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+                                            int height = getHeight();
+                                            int margin = (int) (getContext().getResources().getDimension(R.dimen.calendar_header_height) + 2 * getContext().getResources().getDimension(R.dimen.day_cell_height));
+                                            layoutParams.height = height;
+                                            layoutParams.setMargins(0, margin, 0, 0);
+                                            setLayoutParams(layoutParams);
 
                                             getAgendaListView().scrollToCurrentDate(CalendarManager.getInstance().getToday());
 
@@ -79,7 +76,6 @@ public class AgendaView extends FrameLayout {
                                         }
                                     }
                                 }
-
                         );
                     } else if (event instanceof Events.ForecastFetched) {
                         ((AgendaAdapter) getAgendaListView().getAdapter()).updateEvents(CalendarManager.getInstance().getEvents());
@@ -141,10 +137,6 @@ public class AgendaView extends FrameLayout {
             });
             mover.start();
         }
-    }
-
-    public void enablePlaceholderForCalendar(boolean enable) {
-        this.enablePlaceholder = enable;
     }
 
     // endregion

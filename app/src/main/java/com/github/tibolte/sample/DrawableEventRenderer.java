@@ -5,7 +5,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.tibolte.agendacalendarview.render.CalendarUtils;
 import com.github.tibolte.agendacalendarview.render.EventRenderer;
+
+import java.util.Date;
 
 public class DrawableEventRenderer extends EventRenderer<DrawableCalendarEvent> {
 
@@ -14,22 +17,26 @@ public class DrawableEventRenderer extends EventRenderer<DrawableCalendarEvent> 
     @Override
     public void render(View view, DrawableCalendarEvent event) {
         ImageView imageView = (ImageView) view.findViewById(R.id.view_agenda_event_image);
-        TextView txtTitle = (TextView) view.findViewById(com.github.tibolte.agendacalendarview.R.id.view_agenda_event_title);
-        TextView txtLocation = (TextView) view.findViewById(com.github.tibolte.agendacalendarview.R.id.view_agenda_event_location);
-        LinearLayout descriptionContainer = (LinearLayout) view.findViewById(com.github.tibolte.agendacalendarview.R.id.view_agenda_event_description_container);
-        LinearLayout locationContainer = (LinearLayout) view.findViewById(com.github.tibolte.agendacalendarview.R.id.view_agenda_event_location_container);
+        TextView txtTitle = (TextView) view.findViewById(R.id.view_agenda_event_title);
+        TextView txtLocation = (TextView) view.findViewById(R.id.view_agenda_event_location);
+        LinearLayout descriptionContainer = (LinearLayout) view.findViewById(R.id.view_agenda_event_description_container);
+        LinearLayout locationContainer = (LinearLayout) view.findViewById(R.id.view_agenda_event_location_container);
 
         descriptionContainer.setVisibility(View.VISIBLE);
 
-        imageView.setImageDrawable(view.getContext().getResources().getDrawable(event.getDrawableId()));
+        //imageView.setImageDrawable(view.getContext().getResources().getDrawable(event.getDrawableId()));
 
         txtTitle.setTextColor(view.getResources().getColor(android.R.color.black));
 
         txtTitle.setText(event.getTitle());
-        txtLocation.setText(event.getLocation());
+
+        Date inicio = event.getStartTime().getTime();
+        Date fim = event.getEndTime().getTime();
+
+        txtLocation.setText( event.getLocation() + " " + CalendarUtils.formatDateToString(inicio, "HH:mm") + " à " +CalendarUtils.formatDateToString(fim, "HH:mm") );
         if (event.getLocation().length() > 0) {
             locationContainer.setVisibility(View.VISIBLE);
-            txtLocation.setText(event.getLocation());
+            txtLocation.setText( event.getLocation() + " " + CalendarUtils.formatDateToString(inicio, "HH:mm") + " à " +CalendarUtils.formatDateToString(fim, "HH:mm") );
         } else {
             locationContainer.setVisibility(View.GONE);
         }
@@ -53,5 +60,4 @@ public class DrawableEventRenderer extends EventRenderer<DrawableCalendarEvent> 
         return DrawableCalendarEvent.class;
     }
 
-    // endregion
 }

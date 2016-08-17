@@ -3,4 +3,14 @@
     <color name="orange_dark">#E64A19</color>
     <color name="blue_dark">#00537F</color>
     <color name="yellow">#F5A623</color>
+    <color name="meu_calendar_color">#5C6BC0</color>
+
+    <!--Theme-->
+    <color name="colorPrimary">#673AB7</color>
+    <color name="colorPrimaryDark">#512DA8</color>
+    <color name="colorPrimaryLight">#D1C4E9</color>
+
+    <color name="colorAccent">#00BCD4</color>
+    <color name="colorAccentDark">#0097A7</color>
+    <color name="colorAccentLight">#B2EBF2</color>
 </resources>

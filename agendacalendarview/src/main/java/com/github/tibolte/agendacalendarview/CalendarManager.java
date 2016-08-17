@@ -1,9 +1,13 @@
 package com.github.tibolte.agendacalendarview;
 
+import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
-import com.github.tibolte.agendacalendarview.models.IDayItem;
-import com.github.tibolte.agendacalendarview.models.IWeekItem;
+import com.github.tibolte.agendacalendarview.models.DayItem;
+import com.github.tibolte.agendacalendarview.models.MonthItem;
+import com.github.tibolte.agendacalendarview.models.WeekItem;
+import com.github.tibolte.agendacalendarview.utils.BusProvider;
 import com.github.tibolte.agendacalendarview.utils.DateHelper;
+import com.github.tibolte.agendacalendarview.utils.Events;
 
 import android.content.Context;
 import android.util.Log;
@@ -32,22 +36,34 @@ public class CalendarManager {
     private SimpleDateFormat mWeekdayFormatter;
     private SimpleDateFormat mMonthHalfNameFormat;
 
-    /// instances of classes provided from outside
-    private IDayItem mCleanDay;
-    private IWeekItem mCleanWeek;
-
     /**
      * List of days used by the calendar
      */
-    private List<IDayItem> mDays = new ArrayList<>();
+    private List<DayItem> mDays = new ArrayList<>();
     /**
      * List of weeks used by the calendar
      */
-    private List<IWeekItem> mWeeks = new ArrayList<>();
+    private List<WeekItem> mWeeks = new ArrayList<>();
+    /**
+     * List of months used by the calendar
+     */
+    private List<MonthItem> mMonths = new ArrayList<>();
     /**
      * List of events instances
      */
     private List<CalendarEvent> mEvents = new ArrayList<>();
+    /**
+     * Helper to build our list of weeks
+     */
+    private Calendar mWeekCounter;
+    /**
+     * The start date given to the calendar view
+     */
+    private Calendar mMinCal;
+    /**
+     * The end date given to the calendar view
+     */
+    private Calendar mMaxCal;
 
     // region Constructors
 
@@ -70,6 +86,20 @@ public class CalendarManager {
 
     // region Getters/Setters
 
+    /**
+     * Sets the current mLocale
+     *
+     * @param locale to be set
+     */
+    public void setLocale(Locale locale) {
+        this.mLocale = locale;
+
+        //apply the same locale to all variables depending on that
+        setToday(Calendar.getInstance(mLocale));
+        mWeekdayFormatter = new SimpleDateFormat(getContext().getString(R.string.day_name_format), mLocale);
+        mMonthHalfNameFormat = new SimpleDateFormat(getContext().getString(R.string.month_half_name_format), locale);
+    }
+
     public Locale getLocale() {
         return mLocale;
     }
@@ -86,16 +116,20 @@ public class CalendarManager {
         this.mToday = today;
     }
 
-    public List<IWeekItem> getWeeks() {
+    public List<WeekItem> getWeeks() {
         return mWeeks;
+    }
+
+    public List<MonthItem> getMonths() {
+        return mMonths;
+    }
+
+    public List<DayItem> getDays() {
+        return mDays;
     }
 
     public List<CalendarEvent> getEvents() {
         return mEvents;
-    }
-
-    public List<IDayItem> getDays() {
-        return mDays;
     }
 
     public SimpleDateFormat getWeekdayFormatter() {
@@ -110,7 +144,7 @@ public class CalendarManager {
 
     // region Public methods
 
-    public void buildCal(Calendar minDate, Calendar maxDate, Locale locale, IDayItem cleanDay, IWeekItem cleanWeek) {
+    public void buildCal(Calendar minDate, Calendar maxDate, Locale locale, List<CalendarEvent> events) {
         if (minDate == null || maxDate == null) {
             throw new IllegalArgumentException(
                     "minDate and maxDate must be non-null.");
@@ -125,16 +159,14 @@ public class CalendarManager {
 
         setLocale(locale);
 
-        mDays.clear();
-        mWeeks.clear();
-        mEvents.clear();
+        getDays().clear();
+        getWeeks().clear();
+        getMonths().clear();
+        getEvents().clear();
 
-        mCleanDay = cleanDay;
-        mCleanWeek = cleanWeek;
-
-        Calendar mMinCal = Calendar.getInstance(mLocale);
-        Calendar mMaxCal = Calendar.getInstance(mLocale);
-        Calendar mWeekCounter = Calendar.getInstance(mLocale);
+        mMinCal = Calendar.getInstance(mLocale);
+        mMaxCal = Calendar.getInstance(mLocale);
+        mWeekCounter = Calendar.getInstance(mLocale);
 
         mMinCal.setTime(minDate.getTime());
         mMaxCal.setTime(maxDate.getTime());
@@ -147,42 +179,40 @@ public class CalendarManager {
         mWeekCounter.setTime(mMinCal.getTime());
         int maxMonth = mMaxCal.get(Calendar.MONTH);
         int maxYear = mMaxCal.get(Calendar.YEAR);
-
-        int currentMonth = mWeekCounter.get(Calendar.MONTH);
-        int currentYear = mWeekCounter.get(Calendar.YEAR);
+        // Build another month item and add it to our list, if this value change when we loop through the weeks
+        int tmpMonth = -1;
+        setToday(Calendar.getInstance(mLocale));
 
         // Loop through the weeks
-        while ((currentMonth <= maxMonth // Up to, including the month.
-                || currentYear < maxYear) // Up to the year.
-                && currentYear < maxYear + 1) { // But not > next yr.
-
+        while ((mWeekCounter.get(Calendar.MONTH) <= maxMonth // Up to, including the month.
+                || mWeekCounter.get(Calendar.YEAR) < maxYear) // Up to the year.
+                && mWeekCounter.get(Calendar.YEAR) < maxYear + 1) { // But not > next yr.
             Date date = mWeekCounter.getTime();
-            // Build our week list
-            int currentWeekOfYear = mWeekCounter.get(Calendar.WEEK_OF_YEAR);
 
-            IWeekItem weekItem = cleanWeek.copy();
-            weekItem.setWeekInYear(currentWeekOfYear);
-            weekItem.setYear(currentYear);
-            weekItem.setDate(date);
-            weekItem.setMonth(currentMonth);
-            weekItem.setLabel(mMonthHalfNameFormat.format(date));
-            List<IDayItem> dayItems = getDayCells(mWeekCounter); // gather days for the built week
+            if (tmpMonth != mWeekCounter.get(Calendar.MONTH)) {
+                MonthItem monthItem = new MonthItem(mWeekCounter.get(Calendar.YEAR), mWeekCounter.get(Calendar.MONTH));
+                getMonths().add(monthItem);
+            }
+
+            // Build our week list
+            WeekItem weekItem = new WeekItem(mWeekCounter.get(Calendar.WEEK_OF_YEAR), mWeekCounter.get(Calendar.YEAR), date, mMonthHalfNameFormat.format(date), mWeekCounter.get(Calendar.MONTH));
+            List<DayItem> dayItems = getDayCells(mWeekCounter, events); // gather days for the built week
             weekItem.setDayItems(dayItems);
-            mWeeks.add(weekItem);
+            getWeeks().add(weekItem);
+            addWeekToLastMonth(weekItem);
 
             Log.d(LOG_TAG, String.format("Adding week: %s", weekItem));
-
+            tmpMonth = mWeekCounter.get(Calendar.MONTH);
             mWeekCounter.add(Calendar.WEEK_OF_YEAR, 1);
-
-            currentMonth = mWeekCounter.get(Calendar.MONTH);
-            currentYear = mWeekCounter.get(Calendar.YEAR);
         }
     }
 
-    public void loadEvents(List<CalendarEvent> eventList, CalendarEvent noEvent) {
+    public void loadEvents(List<CalendarEvent> eventList) {
+        /*CalendarLoadTask calendarLoadTask = new CalendarLoadTask();
+        calendarLoadTask.execute();*/
 
-        for (IWeekItem weekItem : getWeeks()) {
-            for (IDayItem dayItem : weekItem.getDayItems()) {
+        for (WeekItem weekItem : getWeeks()) {
+            for (DayItem dayItem : weekItem.getDayItems()) {
                 boolean isEventForDay = false;
                 for (CalendarEvent event : eventList) {
                     if (DateHelper.isBetweenInclusive(dayItem.getDate(), event.getStartTime(), event.getEndTime())) {
@@ -201,35 +231,26 @@ public class CalendarManager {
                 if (!isEventForDay) {
                     Calendar dayInstance = Calendar.getInstance();
                     dayInstance.setTime(dayItem.getDate());
-                    CalendarEvent copy = noEvent.copy();
-
-                    copy.setInstanceDay(dayInstance);
-                    copy.setDayReference(dayItem);
-                    copy.setWeekReference(weekItem);
-                    copy.setLocation("");
-                    copy.setTitle(getContext().getResources().getString(R.string.agenda_event_no_events));
-                    copy.setPlaceholder(true);
-                    getEvents().add(copy);
+                    BaseCalendarEvent event = new BaseCalendarEvent(dayInstance, getContext().getResources().getString(R.string.agenda_event_no_events));
+                    event.setDayReference(dayItem);
+                    event.setWeekReference(weekItem);
+                    getEvents().add(event);
                 }
             }
         }
-    }
 
-    public void loadCal (Locale locale, List<IWeekItem> lWeeks, List<IDayItem> lDays, List<CalendarEvent> lEvents) {
-        mWeeks = lWeeks;
-        mDays = lDays;
-        mEvents = lEvents;
-        setLocale(locale);
+        BusProvider.getInstance().send(new Events.EventsFetched());
+        Log.d(LOG_TAG, "CalendarEventTask finished");
     }
 
     // endregion
 
     // region Private methods
 
-    private List<IDayItem> getDayCells(Calendar startCal) {
+    private List<DayItem> getDayCells(Calendar startCal, List<CalendarEvent> events) {
         Calendar cal = Calendar.getInstance(mLocale);
         cal.setTime(startCal.getTime());
-        List<IDayItem> dayItems = new ArrayList<>();
+        List<DayItem> dayItems = new ArrayList<>();
 
         int firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         int offset = cal.getFirstDayOfWeek() - firstDayOfWeek;
@@ -240,22 +261,23 @@ public class CalendarManager {
 
         Log.d(LOG_TAG, String.format("Buiding row week starting at %s", cal.getTime()));
         for (int c = 0; c < 7; c++) {
-            IDayItem dayItem = mCleanDay.copy();
-            dayItem.buildDayItemFromCal(cal);
+            DayItem dayItem = DayItem.buildDayItemFromCal(cal, events);
+            dayItem.setDayOftheWeek(c);
             dayItems.add(dayItem);
             cal.add(Calendar.DATE, 1);
         }
 
-        mDays.addAll(dayItems);
+        getDays().addAll(dayItems);
         return dayItems;
     }
 
-    private void setLocale(Locale locale) {
-        this.mLocale = locale;
-        setToday(Calendar.getInstance(mLocale));
-        mWeekdayFormatter = new SimpleDateFormat(getContext().getString(R.string.day_name_format), mLocale);
-        mMonthHalfNameFormat = new SimpleDateFormat(getContext().getString(R.string.month_half_name_format), locale);
+    private void addWeekToLastMonth(WeekItem weekItem) {
+        getLastMonth().getWeeks().add(weekItem);
+        getLastMonth().setMonth(mWeekCounter.get(Calendar.MONTH) + 1);
     }
 
+    private MonthItem getLastMonth() {
+        return getMonths().get(getMonths().size() - 1);
+    }
     // endregion
 }

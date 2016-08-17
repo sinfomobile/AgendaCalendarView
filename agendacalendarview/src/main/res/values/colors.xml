@@ -20,5 +20,18 @@
     <color name="theme_light_primary">#BBDEFB</color>
     <color name="theme_accent">#FFEB3B</color>
     <color name="theme_text_icons">#FFFFFF</color>
+    
+    <!-- Cor dos eventos-->
+    <color name="evento_aula_cor">#40B0B7</color>
+    <color name="evento_tarefa_cor">#EFD650</color>
+    <color name="evento_prova_cor">#FF9494</color>
+
+    <!-- Cor dos elementos do calendario-->
+    <color name="letras_header">#D8E1EA</color>
+    <color name="corDoTextoDiasAtivos">#677387</color>
+    <color name="corDoTextoDiasInativos">#A4B2C8</color>
+    <color name="background">#E9EAEE</color>
+    <color name="headerColor">#6D747F</color>
+    <color name="corBordaSelecao">#A4B2C8</color>
 
 </resources>

@@ -61,12 +61,12 @@ public class BaseCalendarEvent implements CalendarEvent {
      * References to a DayItem instance for that event, used to link interaction between the
      * calendar view and the agenda view.
      */
-    private IDayItem mDayReference;
+    private DayItem mDayReference;
     /**
      * References to a WeekItem instance for that event, used to link interaction between the
      * calendar view and the agenda view.
      */
-    private IWeekItem mWeekReference;
+    private WeekItem mWeekReference;
     /**
      * Weather icon string returned by the Dark Sky API.
      */
@@ -94,7 +94,7 @@ public class BaseCalendarEvent implements CalendarEvent {
     public BaseCalendarEvent(long id, int color, String title, String description, String location, long dateStart, long dateEnd, int allDay, String duration) {
         this.mId = id;
         this.mColor = color;
-        this.mAllDay = (allDay == 1);
+        this.mAllDay = (allDay == 1) ? true : false;
         this.mDuration = duration;
         this.mTitle = title;
         this.mDescription = description;
@@ -104,10 +104,6 @@ public class BaseCalendarEvent implements CalendarEvent {
         this.mStartTime.setTimeInMillis(dateStart);
         this.mEndTime = Calendar.getInstance();
         this.mEndTime.setTimeInMillis(dateEnd);
-    }
-
-    public BaseCalendarEvent() {
-
     }
 
     /**
@@ -140,6 +136,19 @@ public class BaseCalendarEvent implements CalendarEvent {
         this.mLocation = calendarEvent.getLocation();
         this.mStartTime = calendarEvent.getStartTime();
         this.mEndTime = calendarEvent.getEndTime();
+    }
+
+    /**
+     * Constructor for placeholder events, used if there are no events during one dat
+     *
+     * @param day   The instance day of the event.
+     * @param title The title of the event.
+     */
+    public BaseCalendarEvent(Calendar day, String title) {
+        this.mPlaceHolder = true;
+        this.mTitle = title;
+        this.mLocation = "";
+        setInstanceDay(day);
     }
 
     // endregion
@@ -189,12 +198,6 @@ public class BaseCalendarEvent implements CalendarEvent {
 
     public void setEndTime(Calendar mEndTime) {
         this.mEndTime = mEndTime;
-    }
-    public void setPlaceholder(boolean placeholder) {
-        mPlaceHolder = placeholder;
-    }
-    public boolean isPlaceholder() {
-        return mPlaceHolder;
     }
 
     public long getId() {
@@ -253,19 +256,19 @@ public class BaseCalendarEvent implements CalendarEvent {
         this.mWeather = mWeather;
     }
 
-    public IDayItem getDayReference() {
+    public DayItem getDayReference() {
         return mDayReference;
     }
 
-    public void setDayReference(IDayItem mDayReference) {
+    public void setDayReference(DayItem mDayReference) {
         this.mDayReference = mDayReference;
     }
 
-    public IWeekItem getWeekReference() {
+    public WeekItem getWeekReference() {
         return mWeekReference;
     }
 
-    public void setWeekReference(IWeekItem mWeekReference) {
+    public void setWeekReference(WeekItem mWeekReference) {
         this.mWeekReference = mWeekReference;
     }
 

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:animationCache="false"
         android:divider="@color/calendar_divider_color"
-        android:dividerHeight="1dp"
+        android:dividerHeight="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
         android:scrollingCache="false"/>

@@ -1,12 +1,12 @@
 package com.github.tibolte.agendacalendarview;
 
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
-import com.github.tibolte.agendacalendarview.models.IDayItem;
+import com.github.tibolte.agendacalendarview.models.DayItem;
 
 import java.util.Calendar;
 
 public interface CalendarPickerController {
-    void onDaySelected(IDayItem dayItem);
+    void onDaySelected(DayItem dayItem);
 
     void onEventSelected(CalendarEvent event);
 

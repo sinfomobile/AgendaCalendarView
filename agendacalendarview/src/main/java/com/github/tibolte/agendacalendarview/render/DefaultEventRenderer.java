@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.github.tibolte.agendacalendarview.R;
 import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 
+import java.util.Date;
+
 /**
  * Class helping to inflate our default layout in the AgendaAdapter
  */
@@ -24,6 +26,9 @@ public class DefaultEventRenderer extends EventRenderer<BaseCalendarEvent> {
 
         descriptionContainer.setVisibility(View.VISIBLE);
         txtTitle.setTextColor(view.getResources().getColor(android.R.color.black));
+
+//        Date inicio = event.getStartTime().getTime();
+//        Date fim = event.getEndTime().getTime();
 
         txtTitle.setText(event.getTitle());
         txtLocation.setText(event.getLocation());

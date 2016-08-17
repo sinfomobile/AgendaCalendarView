@@ -2,7 +2,7 @@ package com.github.tibolte.agendacalendarview.utils;
 
 import com.github.tibolte.agendacalendarview.agenda.AgendaListView;
 
-import android.util.SparseArray;
+import android.support.v4.util.SparseArrayCompat;
 import android.view.View;
 
 /**
@@ -10,8 +10,8 @@ import android.view.View;
  */
 public class ListViewScrollTracker {
     private AgendaListView mListView;
-    private SparseArray<Integer> mPositions;
-    private SparseArray<Integer> mListViewItemHeights = new SparseArray<>();
+    private SparseArrayCompat<Integer> mPositions;
+    private SparseArrayCompat<Integer> mListViewItemHeights = new SparseArrayCompat<>();
     private int mFirstVisiblePosition;
     private int mReferencePosition = -1; // Position of the current date in the Agenda listView
 
@@ -40,10 +40,10 @@ public class ListViewScrollTracker {
      */
     public int calculateIncrementalOffset(int firstVisiblePosition, int visibleItemCount) {
         // Remember previous positions, if any
-        SparseArray<Integer> previousPositions = mPositions;
+        SparseArrayCompat<Integer> previousPositions = mPositions;
 
         // Store new positions
-        mPositions = new SparseArray<>();
+        mPositions = new SparseArrayCompat<Integer>();
         for (int i = 0; i < visibleItemCount; i++) {
             mPositions.put(firstVisiblePosition + i, mListView.getListChildAt(i).getTop());
         }

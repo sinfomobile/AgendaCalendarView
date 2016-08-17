@@ -1,5 +1,16 @@
 package com.github.tibolte.agendacalendarview;
 
+import com.github.tibolte.agendacalendarview.agenda.AgendaAdapter;
+import com.github.tibolte.agendacalendarview.agenda.AgendaView;
+import com.github.tibolte.agendacalendarview.calendar.CalendarView;
+import com.github.tibolte.agendacalendarview.models.CalendarEvent;
+import com.github.tibolte.agendacalendarview.render.DefaultEventRenderer;
+import com.github.tibolte.agendacalendarview.render.EventRenderer;
+import com.github.tibolte.agendacalendarview.utils.BusProvider;
+import com.github.tibolte.agendacalendarview.utils.Events;
+import com.github.tibolte.agendacalendarview.utils.ListViewScrollTracker;
+import com.github.tibolte.agendacalendarview.widgets.FloatingActionButton;
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -15,22 +26,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-
-import com.github.tibolte.agendacalendarview.agenda.AgendaAdapter;
-import com.github.tibolte.agendacalendarview.agenda.AgendaView;
-import com.github.tibolte.agendacalendarview.calendar.CalendarView;
-import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
-import com.github.tibolte.agendacalendarview.models.CalendarEvent;
-import com.github.tibolte.agendacalendarview.models.DayItem;
-import com.github.tibolte.agendacalendarview.models.IDayItem;
-import com.github.tibolte.agendacalendarview.models.IWeekItem;
-import com.github.tibolte.agendacalendarview.models.WeekItem;
-import com.github.tibolte.agendacalendarview.render.DefaultEventRenderer;
-import com.github.tibolte.agendacalendarview.render.EventRenderer;
-import com.github.tibolte.agendacalendarview.utils.BusProvider;
-import com.github.tibolte.agendacalendarview.utils.Events;
-import com.github.tibolte.agendacalendarview.utils.ListViewScrollTracker;
-import com.github.tibolte.agendacalendarview.widgets.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.List;
@@ -123,7 +118,7 @@ public class AgendaCalendarView extends FrameLayout implements StickyListHeaders
         mCalendarView.findViewById(R.id.cal_day_names).setBackgroundColor(mCalendarHeaderColor);
         mCalendarView.findViewById(R.id.list_week).setBackgroundColor(mCalendarBackgroundColor);
 
-        mAgendaView.getAgendaListView().setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+        mAgendaView.getAgendaListView().setOnItemClickListener((AdapterView<?> parent, View view, int position, long id)->{
             mCalendarPickerController.onEventSelected(CalendarManager.getInstance().getEvents().get(position));
         });
 
@@ -195,7 +190,7 @@ public class AgendaCalendarView extends FrameLayout implements StickyListHeaders
     public void init(List<CalendarEvent> eventList, Calendar minDate, Calendar maxDate, Locale locale, CalendarPickerController calendarPickerController) {
         mCalendarPickerController = calendarPickerController;
 
-        CalendarManager.getInstance(getContext()).buildCal(minDate, maxDate, locale, new DayItem(), new WeekItem());
+        CalendarManager.getInstance(getContext()).buildCal(minDate, maxDate, locale, eventList);
 
         // Feed our views with weeks list and events
         mCalendarView.init(CalendarManager.getInstance(getContext()), mCalendarDayTextColor, mCalendarCurrentDayColor, mCalendarPastDayTextColor);
@@ -204,31 +199,7 @@ public class AgendaCalendarView extends FrameLayout implements StickyListHeaders
         AgendaAdapter agendaAdapter = new AgendaAdapter(mAgendaCurrentDayTextColor);
         mAgendaView.getAgendaListView().setAdapter(agendaAdapter);
         mAgendaView.getAgendaListView().setOnStickyHeaderChangedListener(this);
-
-        CalendarManager.getInstance().loadEvents(eventList, new BaseCalendarEvent());
-        BusProvider.getInstance().send(new Events.EventsFetched());
-        Log.d(LOG_TAG, "CalendarEventTask finished");
-
-        // add default event renderer
-        addEventRenderer(new DefaultEventRenderer());
-    }
-
-    public void init(Locale locale, List<IWeekItem> lWeeks, List<IDayItem> lDays, List<CalendarEvent> lEvents, CalendarPickerController calendarPickerController) {
-        mCalendarPickerController = calendarPickerController;
-
-        CalendarManager.getInstance(getContext()).loadCal(locale, lWeeks, lDays, lEvents);
-
-        // Feed our views with weeks list and events
-        mCalendarView.init(CalendarManager.getInstance(getContext()), mCalendarDayTextColor, mCalendarCurrentDayColor, mCalendarPastDayTextColor);
-
-        // Load agenda events and scroll to current day
-        AgendaAdapter agendaAdapter = new AgendaAdapter(mAgendaCurrentDayTextColor);
-        mAgendaView.getAgendaListView().setAdapter(agendaAdapter);
-        mAgendaView.getAgendaListView().setOnStickyHeaderChangedListener(this);
-
-        // notify that actually everything is loaded
-        BusProvider.getInstance().send(new Events.EventsFetched());
-        Log.d(LOG_TAG, "CalendarEventTask finished");
+        CalendarManager.getInstance().loadEvents(eventList);
 
         // add default event renderer
         addEventRenderer(new DefaultEventRenderer());
@@ -237,16 +208,6 @@ public class AgendaCalendarView extends FrameLayout implements StickyListHeaders
     public void addEventRenderer(@NonNull final EventRenderer<?> renderer) {
         AgendaAdapter adapter = (AgendaAdapter) mAgendaView.getAgendaListView().getAdapter();
         adapter.addEventRenderer(renderer);
-    }
-
-    public void enableCalenderView(boolean enable) {
-        mAgendaView.enablePlaceholderForCalendar(enable);
-        mCalendarView.setVisibility(enable ? VISIBLE : GONE);
-        mAgendaView.findViewById(R.id.view_shadow).setVisibility(enable ? VISIBLE : GONE);
-    }
-
-    public void enableFloatingIndicator(boolean enable) {
-        mFloatingActionButton.setVisibility(enable ? VISIBLE : GONE);
     }
 
     // endregion

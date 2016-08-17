@@ -1,14 +1,10 @@
 package com.github.tibolte.sample;
 
 import com.github.tibolte.agendacalendarview.AgendaCalendarView;
-import com.github.tibolte.agendacalendarview.CalendarManager;
 import com.github.tibolte.agendacalendarview.CalendarPickerController;
 import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
 import com.github.tibolte.agendacalendarview.models.DayItem;
-import com.github.tibolte.agendacalendarview.models.IDayItem;
-import com.github.tibolte.agendacalendarview.models.IWeekItem;
-import com.github.tibolte.agendacalendarview.models.WeekItem;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -54,26 +50,9 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
 
         List<CalendarEvent> eventList = new ArrayList<>();
         mockList(eventList);
-        // Sync way
-        /*
+
         mAgendaCalendarView.init(eventList, minDate, maxDate, Locale.getDefault(), this);
         mAgendaCalendarView.addEventRenderer(new DrawableEventRenderer());
-        */
-        //Async way
-
-
-        //////// This can be done once in another thread
-        CalendarManager calendarManager = CalendarManager.getInstance(getApplicationContext());
-        calendarManager.buildCal(minDate, maxDate, Locale.getDefault(), new DayItem(), new WeekItem());
-        calendarManager.loadEvents(eventList, new BaseCalendarEvent());
-        ////////
-
-        List<CalendarEvent> readyEvents = calendarManager.getEvents();
-        List<IDayItem> readyDays = calendarManager.getDays();
-        List<IWeekItem> readyWeeks = calendarManager.getWeeks();
-        mAgendaCalendarView.init(Locale.getDefault(), readyWeeks,readyDays,readyEvents,this);
-        mAgendaCalendarView.addEventRenderer(new DrawableEventRenderer());
-
     }
 
     // endregion
@@ -81,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
     // region Interface - CalendarPickerController
 
     @Override
-    public void onDaySelected(IDayItem dayItem) {
+    public void onDaySelected(DayItem dayItem) {
         Log.d(LOG_TAG, String.format("Selected day: %s", dayItem));
     }
 
@@ -106,25 +85,21 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
         Calendar endTime1 = Calendar.getInstance();
         endTime1.add(Calendar.MONTH, 1);
         BaseCalendarEvent event1 = new BaseCalendarEvent("Thibault travels in Iceland", "A wonderful journey!", "Iceland",
-                ContextCompat.getColor(this, R.color.orange_dark), startTime1, endTime1, true);
+                ContextCompat.getColor(this, R.color.evento_aula_cor), startTime1, endTime1, true);
         eventList.add(event1);
 
         Calendar startTime2 = Calendar.getInstance();
-        startTime2.add(Calendar.DAY_OF_YEAR, 1);
         Calendar endTime2 = Calendar.getInstance();
-        endTime2.add(Calendar.DAY_OF_YEAR, 3);
+        endTime2.add(Calendar.MONTH, 1);
         BaseCalendarEvent event2 = new BaseCalendarEvent("Visit to Dalvík", "A beautiful small town", "Dalvík",
-                ContextCompat.getColor(this, R.color.yellow), startTime2, endTime2, true);
+                ContextCompat.getColor(this, R.color.evento_tarefa_cor), startTime2, endTime2, true);
         eventList.add(event2);
 
         Calendar startTime3 = Calendar.getInstance();
         Calendar endTime3 = Calendar.getInstance();
-        startTime3.set(Calendar.HOUR_OF_DAY, 14);
-        startTime3.set(Calendar.MINUTE, 0);
-        endTime3.set(Calendar.HOUR_OF_DAY, 15);
-        endTime3.set(Calendar.MINUTE, 0);
-        DrawableCalendarEvent event3 = new DrawableCalendarEvent("Visit of Harpa", "", "Dalvík",
-                ContextCompat.getColor(this, R.color.blue_dark), startTime3, endTime3, false, android.R.drawable.ic_dialog_info);
+        endTime3.add(Calendar.MONTH, 1);
+        BaseCalendarEvent event3 = new BaseCalendarEvent("Visit of Harpa", "", "Dalvík",
+                ContextCompat.getColor(this, R.color.evento_prova_cor), startTime3, endTime3, true);
         eventList.add(event3);
     }
 
