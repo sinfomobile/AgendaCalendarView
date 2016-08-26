@@ -1,9 +1,48 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.me.tatarka:gradle-retrolambda:3.2.5"
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
+
+
+ext {
+    bintrayRepo = 'calendarViewSinfo'
+    bintrayName = 'sinfo-calendar-view'
+
+    PUBLISH_GROUP_ID = 'com.example.fbio.sinfo_calendar_view'
+    libraryName = 'AgendaCalendarView'
+    PUBLISH_ARTIFACT_ID = 'sinfo-calendar-view'
+
+    siteUrl = 'https://github.com/sinfomobile/AgendaCalendarView'
+    gitUrl = 'https://github.com/sinfomobile/AgendaCalendarView.git'
+
+    PUBLISH_VERSION = '1.1'
+
+//    developerId = 'sinfomobile'
+    developerName = 'Sinfo Mobile'
+    developerEmail = 'mobileufrn@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+//apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.1"
 
     android {
         lintOptions {
@@ -45,3 +84,5 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'io.reactivex:rxjava:1.1.1'
 }
+
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

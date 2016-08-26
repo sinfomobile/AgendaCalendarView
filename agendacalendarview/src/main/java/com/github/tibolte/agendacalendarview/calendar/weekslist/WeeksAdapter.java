@@ -195,14 +195,26 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
                 // checks if the day has event and accordingly highlights the day in the calender
                 if(dayItem.hasEvent()) {
 
-                    bolinhaAula.setBackgroundResource(R.drawable.event_aula);
-                    bolinhaAula.setVisibility(View.VISIBLE);
 
-                    bolinhaTarefa.setBackgroundResource(R.drawable.event_tarefa);
-                    bolinhaTarefa.setVisibility(View.VISIBLE);
+                    if( (dayItem.getDate().after(mToday.getTime())) || dayItem.isToday()){
+                        bolinhaAula.setBackgroundResource(R.drawable.event_aula);
+                        bolinhaAula.setVisibility(View.VISIBLE);
+                    } else {
+                        bolinhaAula.setVisibility(View.GONE);
+                        bolinhaProva.setVisibility(View.GONE);
+                        bolinhaTarefa.setVisibility(View.GONE);
+                        circleView.setBackgroundResource(R.drawable.event_color_circle);
+                    }
 
-                    bolinhaProva.setBackgroundResource(R.drawable.event_prova);
-                    bolinhaProva.setVisibility(View.VISIBLE);
+
+
+                    //outros tipos de eventos
+
+//                    bolinhaTarefa.setBackgroundResource(R.drawable.event_tarefa);
+//                    bolinhaTarefa.setVisibility(View.VISIBLE);
+//
+//                    bolinhaProva.setBackgroundResource(R.drawable.event_prova);
+//                    bolinhaProva.setVisibility(View.VISIBLE);
 
 
                     //circleView.setBackgroundResource(R.drawable.event_aula);

@@ -1,1 +1,1 @@
-include ':app', ':agendacalendarview'
+include ':app', ':agendacalendarview', ':sinfo-calendar-view', ':calendarview-app'

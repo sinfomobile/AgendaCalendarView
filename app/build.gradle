@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.github.tibolte.sample"
+//        applicationId "com.github.tibolte.sample"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
@@ -39,6 +39,7 @@ configurations {
 
 dependencies {
     compile project(':agendacalendarview')
+//    compile 'com.example.fbio.sinfo_calendar_view:sinfo-calendar-view:1.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
