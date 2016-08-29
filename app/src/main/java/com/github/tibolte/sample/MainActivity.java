@@ -44,9 +44,10 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
         Calendar minDate = Calendar.getInstance();
         Calendar maxDate = Calendar.getInstance();
 
-        minDate.add(Calendar.MONTH, -2);
-        minDate.set(Calendar.DAY_OF_MONTH, 1);
-        maxDate.add(Calendar.YEAR, 1);
+//        minDate.add(Calendar.MONTH, 0);
+//        minDate.set(Calendar.DAY_OF_MONTH, 1);
+
+        maxDate.add(Calendar.MONTH, 1);
 
         List<CalendarEvent> eventList = new ArrayList<>();
         mockList(eventList);
@@ -81,12 +82,7 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
     // region Private Methods
 
     private void mockList(List<CalendarEvent> eventList) {
-        Calendar startTime1 = Calendar.getInstance();
-        Calendar endTime1 = Calendar.getInstance();
-        endTime1.add(Calendar.MONTH, 1);
-        BaseCalendarEvent event1 = new BaseCalendarEvent("Thibault travels in Iceland", "A wonderful journey!", "Iceland",
-                ContextCompat.getColor(this, R.color.evento_aula_cor), startTime1, endTime1, true);
-        eventList.add(event1);
+
 
 //        Calendar startTime2 = Calendar.getInstance();
 //        Calendar endTime2 = Calendar.getInstance();
@@ -94,22 +90,22 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
 //        BaseCalendarEvent event2 = new BaseCalendarEvent("Visit to Dalvík", "A beautiful small town", "Dalvík",
 //                ContextCompat.getColor(this, R.color.evento_tarefa_cor), startTime2, endTime2, true);
 //        eventList.add(event2);
-
-        Calendar startTime3 = Calendar.getInstance();
-        Calendar endTime3 = Calendar.getInstance();
-        endTime3.add(Calendar.MONTH, 1);
-        BaseCalendarEvent event3 = new BaseCalendarEvent("Visit of Harpa", "", "Dalvík",
-                ContextCompat.getColor(this, R.color.evento_prova_cor), startTime3, endTime3, true);
-        eventList.add(event3);
-
-        Calendar startTime4 = Calendar.getInstance();
-        startTime4.add(Calendar.MONTH, -1);
-        Calendar endTime4 = Calendar.getInstance();
-        endTime4.add(Calendar.MONTH, 0);
-        BaseCalendarEvent event4 = new BaseCalendarEvent("Visit of Harpa", "", "Dalvík",
-                ContextCompat.getColor(this, R.color.evento_prova_cor), startTime4, endTime4, true);
-
-        eventList.add(event4);
+//
+//        Calendar startTime3 = Calendar.getInstance();
+//        Calendar endTime3 = Calendar.getInstance();
+//        endTime3.add(Calendar.MONTH, 1);
+//        BaseCalendarEvent event3 = new BaseCalendarEvent("Visit of Harpa", "", "Dalvík",
+//                ContextCompat.getColor(this, R.color.evento_prova_cor), startTime3, endTime3, true);
+//        eventList.add(event3);
+//
+//        Calendar startTime4 = Calendar.getInstance();
+//        startTime4.add(Calendar.MONTH, -1);
+//        Calendar endTime4 = Calendar.getInstance();
+//        endTime4.add(Calendar.MONTH, 0);
+//        BaseCalendarEvent event4 = new BaseCalendarEvent("Visit of Harpa", "", "Dalvík",
+//                ContextCompat.getColor(this, R.color.evento_prova_cor), startTime4, endTime4, true);
+//
+//        eventList.add(event4);
 
         Calendar hoje = Calendar.getInstance();
         Calendar fim = Calendar.getInstance();
@@ -118,6 +114,16 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
                 ContextCompat.getColor(this, R.color.corBordaSelecao), hoje, fim, true);
 
         eventList.add(event5);
+
+        Calendar amanha = Calendar.getInstance();
+        amanha.add(Calendar.DAY_OF_MONTH, 1);
+        Calendar depois = Calendar.getInstance();
+        depois.add(Calendar.DAY_OF_MONTH, 1);
+
+        BaseCalendarEvent event6 = new BaseCalendarEvent("Meu Teste 2", "", "Meu Teste 2",
+                ContextCompat.getColor(this, R.color.corBordaSelecao), amanha, depois, true);
+
+        eventList.add(event6);
 
 
 

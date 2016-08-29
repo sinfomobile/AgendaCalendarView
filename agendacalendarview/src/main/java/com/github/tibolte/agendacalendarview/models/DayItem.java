@@ -127,16 +127,15 @@ public class DayItem implements Parcelable {
      * @return true if day has a event, false if not
      */
     private boolean hasEventForDate(Calendar calendar,List<CalendarEvent> events) {
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         for(int i=0;i<events.size();i++) {
             Date current = calendar.getTime();
 
             Date StartDate = events.get(i).getStartTime().getTime();
-            Date EndDate = events.get(i).getEndTime().getTime();
-            if((current.after(StartDate) && current.before(EndDate)) ||
-                    (current.compareTo(StartDate)==0  || current.compareTo(EndDate)==0)) {
+//            Date EndDate = events.get(i).getEndTime().getTime();
+
+            if(StartDate.getDay() == current.getDay() && StartDate.getMonth() == current.getMonth() && StartDate.getYear() == current.getYear())
                 return true;
-            }
         }
         return false;
     }
@@ -151,6 +150,7 @@ public class DayItem implements Parcelable {
                 + mValue
                 + '}';
     }
+
 
     // region Interface - Parcelable
 
