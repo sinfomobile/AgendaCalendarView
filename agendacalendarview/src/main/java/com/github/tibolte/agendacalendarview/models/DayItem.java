@@ -129,11 +129,13 @@ public class DayItem implements Parcelable {
     private boolean hasEventForDate(Calendar calendar,List<CalendarEvent> events) {
 //        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         for(int i=0;i<events.size();i++) {
+
             Date current = calendar.getTime();
+            if(current.after(events.get(events.size()).getStartTime().getTime()))
+                break;
 
             Date StartDate = events.get(i).getStartTime().getTime();
 //            Date EndDate = events.get(i).getEndTime().getTime();
-
             if(StartDate.getDay() == current.getDay() && StartDate.getMonth() == current.getMonth() && StartDate.getYear() == current.getYear())
                 return true;
         }
