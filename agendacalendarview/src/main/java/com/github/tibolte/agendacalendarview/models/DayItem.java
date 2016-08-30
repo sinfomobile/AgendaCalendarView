@@ -131,7 +131,7 @@ public class DayItem implements Parcelable {
         for(int i=0;i<events.size();i++) {
 
             Date current = calendar.getTime();
-            if(current.after(events.get(events.size()).getStartTime().getTime()))
+            if(current.after(events.get(events.size() - 1).getStartTime().getTime()))
                 break;
 
             Date StartDate = events.get(i).getStartTime().getTime();
