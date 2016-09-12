@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
         // minimum and maximum date of our calendar
         // 2 month behind, one year ahead, example: March 2015 <-> May 2015 <-> May 2016
         Calendar minDate = Calendar.getInstance();
+        minDate.add(Calendar.MONTH, -1);
+
         Calendar maxDate = Calendar.getInstance();
 
 //        minDate.add(Calendar.MONTH, 0);
@@ -124,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements CalendarPickerCon
                 ContextCompat.getColor(this, R.color.corBordaSelecao), amanha, depois, true);
 
         eventList.add(event6);
+
+        Calendar ontem = Calendar.getInstance();
+        ontem.add(Calendar.MONTH, -1);
+        Calendar ontemDepois = Calendar.getInstance();
+        ontemDepois.add(Calendar.DAY_OF_MONTH, 1);
+
+        BaseCalendarEvent event7 = new BaseCalendarEvent("Meu Teste 3", "", "Meu Teste 3",
+                ContextCompat.getColor(this, R.color.corBordaSelecao), ontem, ontemDepois, true);
+
+        eventList.add(event7);
 
 
 

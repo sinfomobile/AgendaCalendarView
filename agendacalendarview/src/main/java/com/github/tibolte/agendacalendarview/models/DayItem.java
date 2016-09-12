@@ -127,17 +127,33 @@ public class DayItem implements Parcelable {
      * @return true if day has a event, false if not
      */
     private boolean hasEventForDate(Calendar calendar,List<CalendarEvent> events) {
+        //Retirar marcadores de eventos passados
 //        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        for(int i=0;i<events.size();i++) {
+//        for(int i=0;i<events.size();i++) {
+//
+//            Date current = calendar.getTime();
+//            if(current.after(events.get(events.size() - 1).getStartTime().getTime()))
+//                break;
+//
+//            Date StartDate = events.get(i).getStartTime().getTime();
+////            Date EndDate = events.get(i).getEndTime().getTime();
+//            if(StartDate.getDay() == current.getDay() && StartDate.getMonth() == current.getMonth() && StartDate.getYear() == current.getYear())
+//                return true;
+//        }
+//        return false;
 
+
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        for(int i=0;i<events.size();i++) {
             Date current = calendar.getTime();
-            if(current.after(events.get(events.size() - 1).getStartTime().getTime()))
-                break;
 
             Date StartDate = events.get(i).getStartTime().getTime();
-//            Date EndDate = events.get(i).getEndTime().getTime();
-            if(StartDate.getDay() == current.getDay() && StartDate.getMonth() == current.getMonth() && StartDate.getYear() == current.getYear())
+            Date EndDate = events.get(i).getEndTime().getTime();
+            if((current.after(StartDate) && current.before(EndDate)) ||
+                    (current.compareTo(StartDate)==0  || current.compareTo(EndDate)==0)) {
                 return true;
+            }
         }
         return false;
     }

@@ -196,15 +196,15 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
                 if(dayItem.hasEvent()) {
 
 
-                    if( (dayItem.getDate().after(mToday.getTime())) || dayItem.isToday()){
-                        bolinhaAula.setBackgroundResource(R.drawable.event_aula);
-                        bolinhaAula.setVisibility(View.VISIBLE);
-                    } else {
-                        bolinhaAula.setVisibility(View.GONE);
-                        bolinhaProva.setVisibility(View.GONE);
-                        bolinhaTarefa.setVisibility(View.GONE);
-                        circleView.setBackgroundResource(R.drawable.event_color_circle);
-                    }
+//                    if( (dayItem.getDate().after(mToday.getTime())) || dayItem.isToday()){
+                    bolinhaAula.setBackgroundResource(R.drawable.event_aula);
+                    bolinhaAula.setVisibility(View.VISIBLE);
+//                    } else {
+//                        bolinhaAula.setVisibility(View.GONE);
+//                        bolinhaProva.setVisibility(View.GONE);
+//                        bolinhaTarefa.setVisibility(View.GONE);
+//                        circleView.setBackgroundResource(R.drawable.event_color_circle);
+//                    }
 
 
 
