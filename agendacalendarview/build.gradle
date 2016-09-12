@@ -25,7 +25,7 @@ ext {
     siteUrl = 'https://github.com/sinfomobile/AgendaCalendarView'
     gitUrl = 'https://github.com/sinfomobile/AgendaCalendarView.git'
 
-    PUBLISH_VERSION = '1.2'
+    PUBLISH_VERSION = '1.4'
 
 //    developerId = 'sinfomobile'
     developerName = 'Sinfo Mobile'
