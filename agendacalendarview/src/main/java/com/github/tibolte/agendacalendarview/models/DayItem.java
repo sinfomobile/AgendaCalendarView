@@ -32,11 +32,11 @@ public class DayItem implements Parcelable {
         this.mValue = value;
         this.mToday = today;
         this.mMonth = month;
-        if(hasEventForDate(calendar,events)) {
-            mHasEvents = true;
-        } else {
-            mHasEvents = false;
-        }
+//        if(hasEventForDate(calendar,events)) {
+//            mHasEvents = true;
+//        } else {
+//            mHasEvents = false;
+//        }
     }
 
     // endregion
@@ -127,13 +127,13 @@ public class DayItem implements Parcelable {
      * @return true if day has a event, false if not
      */
     private boolean hasEventForDate(Calendar calendar,List<CalendarEvent> events) {
-        //Retirar marcadores de eventos passados
+//        Retirar marcadores de eventos passados
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         for(int i=0;i<events.size();i++) {
 
             Date current = calendar.getTime();
-//            if(current.after(events.get(events.size() - 1).getStartTime().getTime()))
-//                break;
+            if(current.after(events.get(events.size() - 1).getStartTime().getTime()))
+                break;
 
             Date StartDate = events.get(i).getStartTime().getTime();
 //            Date EndDate = events.get(i).getEndTime().getTime();

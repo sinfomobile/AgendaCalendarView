@@ -226,6 +226,7 @@ public class CalendarManager {
                         // add instances in chronological order
                         getEvents().add(copy);
                         isEventForDay = true;
+                        dayItem.setHasEvents(true);
                     }
                 }
                 if (!isEventForDay) {
@@ -235,6 +236,7 @@ public class CalendarManager {
                     event.setDayReference(dayItem);
                     event.setWeekReference(weekItem);
                     getEvents().add(event);
+                    dayItem.setHasEvents(false);
                 }
             }
         }
