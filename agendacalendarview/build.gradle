@@ -18,7 +18,7 @@ ext {
     bintrayRepo = 'calendarViewSinfo'
     bintrayName = 'sinfo-calendar-view'
 
-    PUBLISH_GROUP_ID = 'com.sinfo_calendar_view'
+    PUBLISH_GROUP_ID = 'com.example.fbio.sinfo_calendar_view'
     libraryName = 'AgendaCalendarView'
     PUBLISH_ARTIFACT_ID = 'sinfo-calendar-view'
 

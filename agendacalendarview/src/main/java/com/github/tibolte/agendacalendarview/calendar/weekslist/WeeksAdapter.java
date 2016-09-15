@@ -173,6 +173,7 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeekViewHold
                 // Highlight the cell if this day is today
                 if (dayItem.isToday() && !dayItem.isSelected()) {
                     txtDay.setTextColor(mCurrentDayColor);
+                    txtDay.setTypeface(null, Typeface.BOLD);
                 }
 
                 // Show a circle if the day is selected

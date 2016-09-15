@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         agendaCalendar:agendaCurrentDayTextColor="@color/theme_primary"
         agendaCalendar:calendarColor="@android:color/white"
-        agendaCalendar:calendarCurrentDayTextColor="@color/calendar_text_current_day"
+        agendaCalendar:calendarCurrentDayTextColor="@color/blue_dark"
         agendaCalendar:calendarDayTextColor="@color/corDoTextoDiasAtivos"
         agendaCalendar:calendarHeaderColor="@color/headerColor"
         agendaCalendar:calendarPastDayTextColor="@color/corDoTextoDiasInativos"
